@@ -10,6 +10,10 @@ Assuming the data were to be persisted at some point, then this class could alig
 */
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Transaction {
 
     private int accountID;
@@ -80,6 +84,15 @@ public class Transaction {
     //accountID to string
     public String intToString(int id){
         return Integer.toString(id);
+    }
+
+    //get day only from date time string
+    public Date stringToDate(String date) throws ParseException {
+        String[] splitDate = date.split("T");
+        String day = splitDate[0];
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date dayDate = dateFormat.parse(day);
+        return dayDate;
     }
 
     @Override //convert transaction details to comma separated string
