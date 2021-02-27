@@ -5,8 +5,8 @@ Date: 28/02/2021
 
 Notes:
 Assumptions made that a Customer will only have one current account
-and one Savings account only.
-If customer can have more than one of each type, Lists for CurrentAccounts and a List for SavingsAcccounts
+and one Savings account.
+If customer can have more than one of each type, Lists for CurrentAccounts and a List for SavingsAccounts
 could be added to the class.
 */
 
@@ -27,14 +27,8 @@ public class Customer {
         this.savingsAccount = null;
     }
 
-    public int getCustomerID() {
-        return customerID;
-    }
 
-    public void setCustomerID(int customerID) {
-        this.customerID = customerID;
-    }
-
+    //Getters & Setters
     public boolean isHasCurrentAcc() {
         return hasCurrentAcc;
     }

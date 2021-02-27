@@ -10,6 +10,7 @@ properties and methods.
 */
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class Account {
     public Account(int accountID) {
         this.accountID = accountID;
         this.currentBalance = 0.00f;
-        this.transactionList = null;
+        this.transactionList = new ArrayList<>();
     }
 
     //Getters & setters

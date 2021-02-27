@@ -4,8 +4,7 @@ Author: Angela Boakes
 Date: 28/02/2021
 
 Notes:
-
-
+Current account inherits from Account class
 */
 
 public class CurrentAccount extends Account {
