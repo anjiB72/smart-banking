@@ -9,6 +9,8 @@ properties and methods.
 
 */
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 public class Account {
@@ -71,6 +73,13 @@ public class Account {
         } else {
             this.withdrawMoney(amount);
         }
+    }
+
+    //Get date of last entry in Transaction List
+    public Date getLastTransactionDate() throws ParseException {
+        int listLength = this.transactionList.size();
+        Transaction lastTransaction =  this.transactionList.get(listLength-1);
+        return lastTransaction.stringToDate(lastTransaction.getTransactionDateTime());
     }
 
 }
