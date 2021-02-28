@@ -10,6 +10,11 @@ If customer can have more than one of each type, Lists for CurrentAccounts and a
 could be added to the class.
 */
 
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class Customer {
 
     private int customerID;
@@ -17,14 +22,16 @@ public class Customer {
     private boolean hasSavingsAcc;
     private CurrentAccount currentAccount;
     private SavingsAccount savingsAccount;
+    private List<Transaction> allTransactions;
 
     //Constructor
     public Customer(int customerID) {
         this.customerID = customerID;
         this.hasCurrentAcc = false;
         this.hasSavingsAcc = false;
-        this.currentAccount = null;
-        this.savingsAccount = null;
+        this.currentAccount = new CurrentAccount();
+        this.savingsAccount = new SavingsAccount();
+        this.allTransactions = new ArrayList<>();
     }
 
 
@@ -59,5 +66,21 @@ public class Customer {
 
     public void setSavingsAccount(SavingsAccount savingsAccount) {
         this.savingsAccount = savingsAccount;
+    }
+
+    public List<Transaction> getAllTransactions() {
+        return allTransactions;
+    }
+
+    public void setAllTransactions(List<Transaction> allTransactions) {
+        this.allTransactions = allTransactions;
+    }
+
+
+    //Get date of last entry in Transaction List
+    public Date getLastTransactionDate() throws ParseException {
+        int listLength = this.allTransactions.size();
+        Transaction lastTransaction =  this.allTransactions.get(listLength-1);
+        return lastTransaction.stringToDate(lastTransaction.getTransactionDateTime());
     }
 }
