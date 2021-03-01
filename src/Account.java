@@ -4,7 +4,7 @@ Author: Angela Boakes
 Date: 28/02/2021
 
 Notes:
-The Account class is the super class for the current and savings account who inherit it's
+The Account class is the super class for the current and savings account who inherit its
 properties and methods.
 
 */
