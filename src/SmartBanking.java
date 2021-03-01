@@ -17,10 +17,10 @@ import java.util.*;
 
 public class SmartBanking {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
         //check command line arguments has been completed
-        if (args.length != 1){
+        if (args.length != 1) {
             System.out.println("Please enter csv file name as a command line argument");
             System.exit(1);
         }
@@ -34,8 +34,7 @@ public class SmartBanking {
         //Create new customer object
         Customer customer = new Customer(customerID);
          /*
-         Create new current account and savings account objects and assign the customers accounts - will be null
-         if not yet created
+         Create new current account and savings account objects and assign the customers accounts
          */
         CurrentAccount currentAccount = customer.getCurrentAccount();
         SavingsAccount savingsAccount = customer.getSavingsAccount();
@@ -54,7 +53,7 @@ public class SmartBanking {
         */
         try {
             reader = new BufferedReader(new FileReader(args[0]));
-        } catch (FileNotFoundException fnfe){
+        } catch (FileNotFoundException fnfe) {
             System.out.println("Error opening file '" + args[0] + "'");
             System.exit(2);
         }
@@ -88,20 +87,29 @@ public class SmartBanking {
                 float amount = Float.parseFloat(value);
 
                 //Create new transaction object
-                Transaction transaction = new Transaction (accountID,accountType,initiatorType,dateTime,amount);
+                Transaction transaction = new Transaction(accountID, accountType, initiatorType, dateTime, amount);
 
                 //Check account type & create account if no type exists
-                if(accountType.equalsIgnoreCase("CURRENT")) {
+                if (accountType.equalsIgnoreCase("CURRENT")) {
                     // check if hasCurrentAcc is false & create new current account
                     if (customer.isHasCurrentAcc()) {
                         currentAccount = customer.getCurrentAccount();
                     } else {
                         //create new current account
-                        currentAccount = new CurrentAccount(accountID);
-                        customer.setCurrentAccount(currentAccount);
+                        currentAccount.setAccountID(accountID);
                         customer.setHasCurrentAcc(true);
                     }
-                    System.out.println("Current account balance: " + currentAccount.getCurrentBalance());
+                } else {
+                    // check if hasSavingsAcc is false & create new savings account
+                    if (customer.isHasSavingsAcc()) {
+                        //If customer does have savings account
+                        savingsAccount = customer.getSavingsAccount();
+                    } else {
+                        //create new savings account
+                        savingsAccount.setAccountID(accountID);
+                        customer.setHasSavingsAcc(true);
+                    }
+                }
 
                     /*
                     The next If statement checks the date (Day not time) of any previous transaction to the date of current transaction
@@ -109,81 +117,36 @@ public class SmartBanking {
                     If the balance is less than 0 then it will move any savings to bring balance to 0 or as close to 0 depending on savings balance.
                     It posts the transaction date of that system transfer as the prevTransaction date & time of 23:59:59.
                      */
-                    try {
-                        if(customer.isHasSavingsAcc()) {
-                            if (currentAccount.getTransactionList().size() > 0) { //Checks that there are entries in the transaction list
-                                Date prevTransaction = currentAccount.getLastTransactionDate();
-                                Date currTransaction = transaction.stringToDate(dateTime);
+                try {
+                    if (customer.getAllTransactions().size() > 0) { //Checks that there are entries in the transaction list
+                        Date prevTransaction = customer.getLastTransactionDate();
+                        Date currTransaction = transaction.stringToDate(dateTime);
 
-                                //Check if prevTransaction date is before currTransaction date
-                                if (prevTransaction.compareTo(currTransaction) < 0) {
-                                    float balance = currentAccount.getCurrentBalance();
-                                    //Check current account balance
-                                    if (balance < 0.00) {
-                                        float amountToTransfer = 0 - currentAccount.getCurrentBalance(); //ensures amount is +ve float
-                                        savingsAccount.systemTransfer(currentAccount, amountToTransfer, prevTransaction);
-                                    }
-                                }
+                        //Check if prevTransaction date is before currTransaction date
+                        if (prevTransaction.compareTo(currTransaction) < 0) {
+                            float balance = currentAccount.getCurrentBalance();
+                            //Check current account balance - if less than 0, undertake a system transfer
+                            if (balance < 0.00) {
+                                float amountToTransfer = 0 - currentAccount.getCurrentBalance(); //ensures amount is +ve float
+                                List<Transaction> systemTransactions = savingsAccount.systemTransfer(currentAccount, amountToTransfer, prevTransaction);
+                                customer.getAllTransactions().addAll(systemTransactions);
                             }
                         }
-                            //Once any system transfers have occurred then the balance updated
-                            currentAccount.manualTransaction(amount); //Apply transaction to the account
-                        }
-                         catch (ParseException pe){
-                        System.err.println(pe.getMessage());
                     }
-                    //Once any system transfers have occurred then the current transaction is posted and the balance updated
-                    currentAccount.getTransactionList().add(transaction); //add transaction to current account list
-                    System.out.println("Account type: " + accountType + " Amount: " + amount);
-                    System.out.println("Current account balance: " + currentAccount.getCurrentBalance());
+                } catch (ParseException pe) {
+                    System.err.println(pe.getMessage());
                 }
-                else {
-                    // check if hasSavingsAcc is false & create new savings account
-                    if (customer.isHasSavingsAcc()) {
-                        //If customer does have savings account
-                        savingsAccount = customer.getSavingsAccount();
-                    } else {
-                        //create new savings account
-                        savingsAccount = new SavingsAccount(accountID);
-                        customer.setSavingsAccount(savingsAccount);
-                        customer.setHasSavingsAcc(true);
-                    }
-                    System.out.println("Savings account balance: " + savingsAccount.getCurrentBalance());
-                    //Apply transaction amount to savings account
+                //Once any system transfers have occurred then the current transaction is posted and the balance updated
+                if(accountType.equalsIgnoreCase("CURRENT")){
+                    currentAccount.manualTransaction(amount);
+                } else {
                     savingsAccount.manualTransaction(amount);
-                    savingsAccount.getTransactionList().add(transaction);
-                    System.out.println("Account type: " + accountType + " Amount: " + amount);
-                    System.out.println("Savings account balance: " + savingsAccount.getCurrentBalance());
                 }
+                customer.getAllTransactions().add(transaction);
+            }//End of While loop
 
-            }
-            //End of While loop
-
-            //Collate all transactions into one list
-            List<Transaction> allTransactions = new ArrayList<>();
-            List<Transaction> currentAccountTransactions = currentAccount.getTransactionList();
-            List<Transaction> savingsAccountTransactions = savingsAccount.getTransactionList();
-            allTransactions.addAll(currentAccountTransactions);
-            allTransactions.addAll(savingsAccountTransactions);
-
-            //Sort Transaction list in date order - uses bubble sort for loops
-            String compareA, compareB;
-            int arrayLength = allTransactions.size();
-            int i, index;
-            Transaction temp;
-            for(i=0; i<arrayLength; i++){
-                for (int j=arrayLength-1; j>i; j--) {
-                    compareA = allTransactions.get(j-1).getTransactionDateTime();
-                    compareB = allTransactions.get(j).getTransactionDateTime();
-                    if (compareB.compareTo(compareA) < 0) {
-                        temp = allTransactions.get(j);
-                        allTransactions.set(j, allTransactions.get(j-1));
-                        allTransactions.set(j-1, temp);
-                    }
-                }
-            }
-
-            //Loop through sorted list, convert to comma separated string and print to file
+            //Loop through transaction list, convert to comma separated string and print to file
+            List<Transaction> allTransactions = customer.getAllTransactions();
             for (Transaction transaction: allTransactions){
                 String transactionString = transaction.toString();
                 printWriter.println(transactionString);

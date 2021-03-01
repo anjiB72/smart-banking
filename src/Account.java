@@ -21,6 +21,14 @@ public class Account {
     List<Transaction> transactionList;
 
     //Constructor
+
+
+    public Account() {
+        this.accountID = 0;
+        this.currentBalance = 0.00f;
+        this.transactionList = new ArrayList<>();
+    }
+
     public Account(int accountID) {
         this.accountID = accountID;
         this.currentBalance = 0.00f;
@@ -76,11 +84,5 @@ public class Account {
         }
     }
 
-    //Get date of last entry in Transaction List
-    public Date getLastTransactionDate() throws ParseException {
-        int listLength = this.transactionList.size();
-        Transaction lastTransaction =  this.transactionList.get(listLength-1);
-        return lastTransaction.stringToDate(lastTransaction.getTransactionDateTime());
-    }
 
 }

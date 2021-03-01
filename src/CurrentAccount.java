@@ -9,6 +9,10 @@ Current account inherits from Account class
 
 public class CurrentAccount extends Account {
 
+    public CurrentAccount() {
+        super();
+    }
+
     public CurrentAccount(int accountID) {
         super(accountID);
     }

@@ -9,10 +9,15 @@ Has additional method to transfer savings to Current account automatically
 */
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class SavingsAccount extends Account{
 
+    public SavingsAccount() {
+        super();
+    }
 
     public SavingsAccount(int accountID) {
         super(accountID);
@@ -21,8 +26,11 @@ public class SavingsAccount extends Account{
 
     //Method to transfer money to current account automatically
 
-    public void systemTransfer(CurrentAccount account, float amount, Date date) {
+    public List<Transaction> systemTransfer(CurrentAccount account, float amount, Date date) {
+
+        List<Transaction> systemTransactions = new ArrayList<>();
         float savingsBalance = this.getCurrentBalance();
+
         //check if amount is greater than savings account balance and change the transfer amount to the balance if it is.
         if (amount > savingsBalance) {
             amount = savingsBalance;
@@ -39,14 +47,6 @@ public class SavingsAccount extends Account{
         //Create local variable for the InitiatorType
         String initiator = "SYSTEM";
 
-        //deposit amount into current account
-        account.depositMoney(amount);
-        //create new transaction for deposit to CurrentAccount
-        Transaction depositTransaction = new Transaction(currentAccountID,"CURRENT",initiator,systemTransactionDate,amount);
-        //Add depositTransaction to CurrentAccount transaction list
-        account.getTransactionList().add(depositTransaction);
-        System.out.println("System Transaction - Current account balance: " + account.getCurrentBalance());
-
         //Withdraw amount from Savings account
         amount = 0.00f - amount;//change amount to negative float
         //withdraw money from savings account
@@ -54,7 +54,16 @@ public class SavingsAccount extends Account{
         //create new transaction for withdrawal
         Transaction withdrawalTransaction = new Transaction(savingsAccountID, "SAVINGS", initiator, systemTransactionDate, amount);
         //Add withdrawalTransaction to SavingsAccount transaction list
-        this.getTransactionList().add(withdrawalTransaction);
-        System.out.println("System Transaction - Savings account balance: " + this.getCurrentBalance());
+        systemTransactions.add(withdrawalTransaction);
+
+        //deposit amount into current account
+        amount = 0.00f - amount;//change amount to +ve float
+        account.depositMoney(amount);
+        //create new transaction for deposit to CurrentAccount
+        Transaction depositTransaction = new Transaction(currentAccountID,"CURRENT",initiator,systemTransactionDate,amount);
+        //Add depositTransaction to CurrentAccount transaction list
+        systemTransactions.add(depositTransaction);
+
+       return systemTransactions;
     }
 }
