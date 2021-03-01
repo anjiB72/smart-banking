@@ -30,7 +30,7 @@ It outputs a new file with the original transaction plus the new automated trans
  <ul>
   <li>Download the files as a ZIP file using the Green button above - save to a local directory on your computer.  Skip this step if using aleady provided ZIP file</li>
   <li>Extract files from the Zipped folder and navigate to the src folder</li>
-  <li>Open up a command line interface such as Command Prompt on Windows</li>
+  <li>Open up a command line interface for your OS (such as Command Prompt on Windows)</li>
   <li>Navigate to the src folder in your command line</li>
   <li>To build the programme, in the command line, type 'javac *.java'. </li>
   <li>Move the .csv ledger file that you want to use into the src folder </li>
