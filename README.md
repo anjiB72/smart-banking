@@ -28,7 +28,7 @@ It outputs a new file with the original transaction plus the new automated trans
  
  <h2>How to run the programme</h2>
  <ul>
-  <li>Download the files as a ZIP file using the Green button above - save to a local directory on your computer</li>
+  <li>Download the files as a ZIP file using the Green button above - save to a local directory on your computer.  Skip this step if using aleady provided ZIP file</li>
   <li>Extract files from the Zipped folder and navigate to the src folder</li>
   <li>Open up a command line interface such as Command Prompt on Windows</li>
   <li>Navigate to the src folder in your command line</li>
