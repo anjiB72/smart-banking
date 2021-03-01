@@ -31,8 +31,9 @@ It outputs a new file with the original transaction plus the new automated trans
   <li>Download the files as a ZIP file using the Green button above - save to a local directory on your computer</li>
   <li>Extract files from the Zipped folder and navigate to the src folder</li>
   <li>Open up a command line interface such as Command Prompt on Windows</li>
-  <li>Navigate to the src folder within the extracted folder</li>
-  <li>The class files have been created so you shouldn't need to compile but just run the programme</li>
+  <li>Navigate to the src folder in your command line</li>
+  <li>To build the programme, in the command line, type 'javac *.java'. </li>
+  <li>You should see a new line appear if the compilation is successful & .class files appear in the src folder.</li>
   <li>Move the .csv ledger file that you want to use into the src folder </li>
   <li>Type 'java SmartBanking name-of-ledgerfile.csv' into the command line</li>
   <li>The output file will save to the src folder and should be visible in the folder to open and view the output</li>
